@@ -1,0 +1,16 @@
+<RCC>
+    <qresource prefix="/new/prefix1">
+        <file>images/purple-open-oval-one.png</file>
+        <file>images/purple-open-oval-three.png</file>
+        <file>images/purple-open-oval-two.png</file>
+        <file>images/green-open-oval-one.png</file>
+        <file>images/green-open-oval-three.png</file>
+        <file>images/green-open-oval-two.png</file>
+        <file>images/red-open-oval-one.png</file>
+        <file>images/red-open-oval-three.png</file>
+        <file>images/red-open-oval-two.png</file>
+        <file>images/purple-closed-oval-one.png</file>
+        <file>images/purple-closed-oval-three.png</file>
+        <file>images/purple-closed-oval-two.png</file>
+    </qresource>
+</RCC>

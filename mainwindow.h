@@ -19,6 +19,7 @@ public:
 
 public slots:
     void onPushButtonClicked();
+    void onRadioButtonClicked(bool checked);
 
 private:
     Ui::MainWindow *ui;
