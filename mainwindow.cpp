@@ -7,7 +7,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    connect(ui->pushButton, &QPushButton::clicked, this, &MainWindow::onPushButtonClicked);
+    //connect(ui->pushButton, &QPushButton::clicked, this, &MainWindow::onPushButtonClicked);
 }
 
 MainWindow::~MainWindow()
@@ -17,5 +17,5 @@ MainWindow::~MainWindow()
 
 void MainWindow::onPushButtonClicked()
 {
-    ui->label->setText("Button Clicked!");
+    //ui->label->setText("Button Clicked!");
 }
