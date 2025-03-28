@@ -548,6 +548,8 @@ MainWindow::MainWindow(QWidget *parent)
             onPushButtonClicked(buttons[i], iconNames[i]);
         });
     }
+    // connect the check sets button to the slot
+    connect(ui->checkSet, &QPushButton::clicked, this, &MainWindow::onCheckSetClicked);
 }
 
 MainWindow::~MainWindow()
@@ -560,6 +562,17 @@ void MainWindow::onPushButtonClicked(QPushButton *button, QString iconName)
     // update the label to the associated button that was clicked
     if (button) {
         ui->label->setText(iconName);
+        // check if any of the three selected cards have been chosen, update background color
+        if (!selectedCard1) {
+            selectedCard1 = button;
+            button->setStyleSheet("background-color: yellow;");
+        } else if (!selectedCard2) {
+            selectedCard2 = button;
+            button->setStyleSheet("background-color: yellow;");
+        } else if (!selectedCard3) {
+            selectedCard3 = button;
+            button->setStyleSheet("background-color: yellow;");
+        }
     }
 }
 
@@ -579,9 +592,63 @@ void MainWindow::onRadioButtonClicked(bool checked)
     }
 }
 
-void MainWindow::checkSet(QPushButton *button1, QPushButton *button2, QPushButton *button3) {
-    // check if the current set is a valid set
+void MainWindow::onCheckSetClicked() {
 
+    // check if three cards have been selected, call the check set function
+    if (selectedCard1 && selectedCard2 && selectedCard3) {
+        checkSet(selectedCard1, selectedCard2, selectedCard3);
+    } else {
+        // else, display message
+        QMessageBox::warning(this, "Error", "Please select exactly three cards.");
+    }
+}
+
+void MainWindow::checkSet(QPushButton *button1, QPushButton *button2, QPushButton *button3) {
+
+    // extract the icon names for each button
+    QString iconeName1 = button1->icon().name();
+    QString iconeName2 = button2->icon().name();
+    QString iconeName3 = button3->icon().name();
+
+    // tokenize the icon names
+    QStringList tokens1 = iconeName1.split("_");
+    QStringList tokens2 = iconeName2.split("_");
+    QStringList tokens3 = iconeName3.split("_");
+
+    // extract each component from the tokens
+    QString color1 = tokens1[0];
+    QString shading1 = tokens1[1];
+    QString shape1 = tokens1[2];
+    QString number1 = tokens1[3];
+
+    QString color2 = tokens2[0];
+    QString shading2 = tokens2[1];
+    QString shape2 = tokens2[2];
+    QString number2 = tokens2[3];
+
+    QString color3 = tokens3[0];
+    QString shading3 = tokens3[1];
+    QString shape3 = tokens3[2];
+    QString number3 = tokens3[3];
+
+    // check if each property is either all the same or all different
+    bool isValidSet = isSameOrDiff(color1, color2, color3) &&
+                      isSameOrDiff(shading1, shading2, shading3) &&
+                      isSameOrDiff(shape1, shape2, shape3) &&
+                      isSameOrDiff(number1, number2, number3);
+
+    // notify the user if valid or not valid set
+    if (isValidSet) {
+        QMessageBox::information(this, "Valid Set", "Successfull set!");
+    } else {
+        QMessageBox::warning(this, "Invalid Set", "Unsuccessfull set!");
+    }
+}
+
+// helper function to check if the values are either all the same or all different
+template <typename T>
+bool isSameOrDiff(T a, T b, T c) {
+    return (a == b && b == c) || (a != b && b != c && a != c);
 }
 
 

@@ -7,6 +7,7 @@
 #include <QIcon>
 #include <QPalette>
 #include <QColor>
+#include <QMessageBox>
 #include <random>
 #include <ctime>
 
@@ -27,7 +28,16 @@ public:
 public slots:
     void onPushButtonClicked(QPushButton *button, QString iconName);
     void onRadioButtonClicked(bool checked);
+    void onCheckSetClicked();
+
+private:
+    QPushButton* selectedCard1 = nullptr;
+    QPushButton* selectedCard2 = nullptr;
+    QPushButton* selectedCard3 = nullptr;
+
     void checkSet(QPushButton *button1, QPushButton *button2, QPushButton *button3);
+    template <typename T>
+    bool isSameOrDiff(T a, T b, T c);
 
 private:
     Ui::MainWindow *ui;
