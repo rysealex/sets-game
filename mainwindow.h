@@ -2,6 +2,13 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QPushButton>
+#include <QRadioButton>
+#include <QIcon>
+#include <QPalette>
+#include <QColor>
+#include <random>
+#include <ctime>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -18,8 +25,9 @@ public:
     ~MainWindow();
 
 public slots:
-    void onPushButtonClicked();
+    void onPushButtonClicked(QPushButton *button, QString iconName);
     void onRadioButtonClicked(bool checked);
+    void checkSet(QPushButton *button1, QPushButton *button2, QPushButton *button3);
 
 private:
     Ui::MainWindow *ui;
