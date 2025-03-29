@@ -32,9 +32,12 @@ public:
     ~MainWindow();
 
 public slots:
+    void startGame();
     void initializeCards();
     void getStartingCards();
-    void onPushButtonClicked(QPushButton *button, QString iconName);
+    void hideNewCards();
+    void connectComponents();
+    void onPushButtonClicked(QPushButton *button);
     void onRadioButtonClicked(bool checked);
     void onCheckSetClicked();
     void drawNewCards();
@@ -45,9 +48,6 @@ private:
     Ui::MainWindow *ui;
 
     QStack<QPair<QPushButton*, QString>> cardStack;
-
-    QPushButton* startingButtons[START_SIZE];
-    QString iconNames[START_SIZE];
 
     QPushButton* selectedCard1 = nullptr;
     QPushButton* selectedCard2 = nullptr;
