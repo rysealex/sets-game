@@ -18,34 +18,6 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="1" column="1">
-     <widget class="QPushButton" name="pushButton5">
-      <property name="text">
-       <string>PushButton5</string>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="3">
-     <widget class="QPushButton" name="pushButton3">
-      <property name="text">
-       <string>PushButton3</string>
-      </property>
-     </widget>
-    </item>
-    <item row="2" column="2">
-     <widget class="QPushButton" name="pushButton10">
-      <property name="text">
-       <string>PushButton10</string>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="5">
-     <widget class="QRadioButton" name="radioButton">
-      <property name="text">
-       <string>Filter Background</string>
-      </property>
-     </widget>
-    </item>
     <item row="2" column="3">
      <widget class="QPushButton" name="pushButton11">
       <property name="text">
@@ -53,17 +25,10 @@
       </property>
      </widget>
     </item>
-    <item row="2" column="4">
-     <widget class="QPushButton" name="pushButton12">
+    <item row="1" column="1">
+     <widget class="QPushButton" name="pushButton5">
       <property name="text">
-       <string>PushButton12</string>
-      </property>
-     </widget>
-    </item>
-    <item row="2" column="1">
-     <widget class="QPushButton" name="pushButton9">
-      <property name="text">
-       <string>PushButton9</string>
+       <string>PushButton5</string>
       </property>
      </widget>
     </item>
@@ -74,10 +39,24 @@
       </property>
      </widget>
     </item>
-    <item row="1" column="2">
-     <widget class="QPushButton" name="pushButton6">
+    <item row="0" column="1">
+     <widget class="QPushButton" name="pushButton1">
       <property name="text">
-       <string>PushButton6</string>
+       <string>PushButton1</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="4">
+     <widget class="QPushButton" name="pushButton12">
+      <property name="text">
+       <string>PushButton12</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="0">
+     <widget class="QLabel" name="label">
+      <property name="text">
+       <string>TextLabel</string>
       </property>
      </widget>
     </item>
@@ -88,6 +67,27 @@
       </property>
      </widget>
     </item>
+    <item row="2" column="2">
+     <widget class="QPushButton" name="pushButton10">
+      <property name="text">
+       <string>PushButton10</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="3">
+     <widget class="QPushButton" name="pushButton3">
+      <property name="text">
+       <string>PushButton3</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="1">
+     <widget class="QPushButton" name="pushButton9">
+      <property name="text">
+       <string>PushButton9</string>
+      </property>
+     </widget>
+    </item>
     <item row="1" column="4">
      <widget class="QPushButton" name="pushButton8">
       <property name="text">
@@ -95,10 +95,17 @@
       </property>
      </widget>
     </item>
-    <item row="0" column="1">
-     <widget class="QPushButton" name="pushButton1">
+    <item row="1" column="0">
+     <widget class="QPushButton" name="addCard">
       <property name="text">
-       <string>PushButton1</string>
+       <string>Add Card</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="0">
+     <widget class="QPushButton" name="checkSet">
+      <property name="text">
+       <string>Check Set</string>
       </property>
      </widget>
     </item>
@@ -109,17 +116,31 @@
       </property>
      </widget>
     </item>
-    <item row="1" column="0">
-     <widget class="QLabel" name="label">
+    <item row="1" column="2">
+     <widget class="QPushButton" name="pushButton6">
       <property name="text">
-       <string>TextLabel</string>
+       <string>PushButton6</string>
       </property>
      </widget>
     </item>
-    <item row="0" column="0">
-     <widget class="QPushButton" name="checkSet">
+    <item row="0" column="6">
+     <widget class="QPushButton" name="pushButtonNew1">
       <property name="text">
-       <string>Check Set</string>
+       <string/>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="6">
+     <widget class="QPushButton" name="pushButtonNew2">
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="6">
+     <widget class="QPushButton" name="pushButtonNew3">
+      <property name="text">
+       <string/>
       </property>
      </widget>
     </item>
