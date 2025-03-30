@@ -11,6 +11,7 @@
 #include <QMessageBox>
 #include <QStack>
 #include <QPair>
+#include <QTimer>
 #include <random>
 #include <ctime>
 
@@ -37,6 +38,8 @@ public slots:
     void getStartingCards();
     void hideNewCards();
     void connectComponents();
+    void startTimer();
+    void onTimeout();
     void onPushButtonClicked(QPushButton *button);
     void onRadioButtonClicked(bool checked);
     void onCheckSetClicked();
@@ -52,6 +55,9 @@ private:
     QPushButton* selectedCard1 = nullptr;
     QPushButton* selectedCard2 = nullptr;
     QPushButton* selectedCard3 = nullptr;
+
+    int setScoreCounter = 0;
+    int timerCounter = 0;
 
     void checkSet(QPushButton *button1, QPushButton *button2, QPushButton *button3);
     template <typename T>

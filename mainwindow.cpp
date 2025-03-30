@@ -22,6 +22,7 @@ void MainWindow::startGame()
     getStartingCards();
     hideNewCards();
     connectComponents();
+    startTimer();
 }
 
 void MainWindow::initializeCards()
@@ -193,12 +194,41 @@ void MainWindow::connectComponents()
     //connect(ui->radioButton, &QRadioButton::clicked, this, &MainWindow::onRadioButtonClicked);
 }
 
+void MainWindow::startTimer()
+{
+    // create the timer
+    QTimer *timer = new QTimer(this);
+    // set the interval for the timer to 1000 ms (1 second)
+    timer->setInterval(1000);
+    // connect the timeout signal of the timer to the onTimeout method
+    connect(timer, &QTimer::timeout, this, &MainWindow::onTimeout);
+    // start the timer
+    timer->start();
+}
+
+void MainWindow::onTimeout()
+{
+    // increment the timer counter
+    timerCounter++;
+
+    if (timerCounter == 60)
+    {
+        timerCounter = 0;
+        ui->menuTimer->setTitle("Timer 01:" + QString::number(timerCounter));
+    }
+    else
+    {
+        // update the menuTimer title every second
+        ui->menuTimer->setTitle("Timer 00:" + QString::number(timerCounter));
+    }
+}
+
 void MainWindow::onPushButtonClicked(QPushButton *button)
 {
     // update the label to the associated button that was clicked
     if (button)
     {
-        ui->label->setText(button->property("iconName").toString());
+        //ui->label->setText(button->property("iconName").toString());
         // check first if the button that was clicked is already one of the selcted buttons
         // meaning unselect that button and reset the background color
         if (button == selectedCard1)
@@ -339,6 +369,9 @@ void MainWindow::checkSet(QPushButton *button1, QPushButton *button2, QPushButto
     if (isValidSet)
     {
         QMessageBox::information(this, "Valid Set", "Successfull set!");
+
+        // increment the setScore label
+        ui->setScore->setText("Set Score: " + QString::number(++setScoreCounter));
 
         // check if the cardStack is empty
         if (isCardStackEmpty())
