@@ -35,6 +35,7 @@ public:
 public slots:
     void startGame();
     void initializeCards();
+    void calculatePossibleSets(const QVector<QPair<QPushButton*, QString>>& deck);
     void getStartingCards();
     void hideNewCards();
     void connectComponents();
@@ -46,20 +47,24 @@ public slots:
     void drawNewCards();
     bool isCardStackEmpty();
     void onAddCardClicked();
+    QVector<QPair<QPushButton*, QString>> getRemainingCards();
+    void endGame();
 
 private:
     Ui::MainWindow *ui;
 
     QStack<QPair<QPushButton*, QString>> cardStack;
+    QStack<QPair<QPushButton*, QString>> tempStack;
 
     QPushButton* selectedCard1 = nullptr;
     QPushButton* selectedCard2 = nullptr;
     QPushButton* selectedCard3 = nullptr;
 
+    int possibleSets = 0;
     int setScoreCounter = 0;
     int timerCounter = 0;
 
-    void checkSet(QPushButton *button1, QPushButton *button2, QPushButton *button3);
+    bool checkSet(QPushButton *button1, QPushButton *button2, QPushButton *button3, bool calcFlag);
     template <typename T>
     bool isSameOrDiff(T a, T b, T c)
     {

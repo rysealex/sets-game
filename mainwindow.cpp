@@ -19,7 +19,6 @@ void MainWindow::startGame()
 {
     // calling all essential function to start the game
     initializeCards();
-    getStartingCards();
     hideNewCards();
     connectComponents();
     startTimer();
@@ -139,9 +138,60 @@ void MainWindow::initializeCards()
         cardButton->setText(""); // clear the text
         cardButton->setIconSize(QSize(100, 100)); // set the icon size
 
-        // push the current button and the corresponding card name onto the cardStack
+        // push the current button and the corresponding card name onto the cardStack and tempStack
         cardStack.push(QPair<QPushButton*, QString>(cardButton, cardVector[i].first));
+        tempStack.push(QPair<QPushButton*, QString>(cardButton, cardVector[i].first));
     }
+
+    // create a QVector for holding the deck
+    QVector<QPair<QPushButton*, QString>> deck;
+    // populate the deck with the tempStack until tempStack is empty
+    while (!tempStack.empty())
+    {
+        deck.append(tempStack.pop());
+    }
+    // get the starting cards
+    getStartingCards();
+    // calculate all the possible sets in the shuffled deck
+    //calculatePossibleSets(deck);
+}
+
+void MainWindow::calculatePossibleSets(const QVector<QPair<QPushButton*, QString>>& deck)
+{
+    for (int i = 0; i < deck.size(); i++)
+    {
+        qDebug() << "Button: " << deck[i].first << " Icon Name: " << deck[i].second << "\n";
+    }
+    // iterate through all combinations of 3 cards from the deck
+    for (int i = 0; i < deck.size(); i++)
+    {
+        for (int j = i + 1; j < deck.size(); j++)
+        {
+            for (int k = j + 1; k < deck.size(); k++)
+            {
+                // get each button in groups of 3 from the deck
+                QPushButton* button1 = deck[i].first;
+                button1->setProperty("iconName", deck[i].second); // udpate the iconName property
+                QPushButton* button2 = deck[j].first;
+                button2->setProperty("iconName", deck[j].second); // udpate the iconName property
+                QPushButton* button3 = deck[k].first;
+                button3->setProperty("iconName", deck[k].second); // udpate the iconName property
+
+                qDebug() << "Checking set: "
+                         << button1->property("iconName").toString() << ", "
+                         << button2->property("iconName").toString() << ", "
+                         << button3->property("iconName").toString();
+
+                // check if the current buttons are a valid set
+                // use true as the calcFlag, signifying the calculation phase
+                if (checkSet(button1, button2, button3, true))
+                {
+                    possibleSets++; // increment the possible sets counter
+                }
+            }
+        }
+    }
+    qDebug() << "Possible Sets: " << possibleSets << "\n";
 }
 
 void MainWindow::getStartingCards()
@@ -211,16 +261,17 @@ void MainWindow::onTimeout()
     // increment the timer counter
     timerCounter++;
 
-    if (timerCounter == 60)
-    {
-        timerCounter = 0;
-        ui->menuTimer->setTitle("Timer 01:" + QString::number(timerCounter));
-    }
-    else
-    {
-        // update the menuTimer title every second
-        ui->menuTimer->setTitle("Timer 00:" + QString::number(timerCounter));
-    }
+    // calculate the minutes and seconds
+    int min = timerCounter / 60;
+    int sec = timerCounter % 60;
+
+    // format the timer as mm:ss
+    QString timerText = QString("%1:%2")
+                            .arg(min, 2, 10, QChar('0')) // ensuring two digits for minutes
+                            .arg(sec, 2, 10, QChar('0')); // ensuring two digits for seconds
+
+    // update the menuTimer title every second
+    ui->menuTimer->setTitle("Timer " + timerText);
 }
 
 void MainWindow::onPushButtonClicked(QPushButton *button)
@@ -292,9 +343,10 @@ void MainWindow::onRadioButtonClicked(bool checked)
 void MainWindow::onCheckSetClicked()
 {
     // check if three cards have been selected, call the check set function
+    // use false for the calcFlag, signifying no calculation phase
     if (selectedCard1 && selectedCard2 && selectedCard3)
     {
-        checkSet(selectedCard1, selectedCard2, selectedCard3);
+        checkSet(selectedCard1, selectedCard2, selectedCard3, false);
     }
     else
     {
@@ -320,7 +372,7 @@ void MainWindow::onCheckSetClicked()
     }
 }
 
-void MainWindow::checkSet(QPushButton *button1, QPushButton *button2, QPushButton *button3)
+bool MainWindow::checkSet(QPushButton *button1, QPushButton *button2, QPushButton *button3, bool calcFlag)
 {
     // extract the icon names for each button
     QString iconName1 = button1->property("iconName").toString();
@@ -340,7 +392,7 @@ void MainWindow::checkSet(QPushButton *button1, QPushButton *button2, QPushButto
     if (tokens1.size() < 4 || tokens2.size() < 4 || tokens3.size() < 4)
     {
         QMessageBox::warning(this, "Error", "Icon names failure.");
-        return;
+        qApp->exit();
     }
 
     // extract each component from the tokens
@@ -365,6 +417,12 @@ void MainWindow::checkSet(QPushButton *button1, QPushButton *button2, QPushButto
                       isSameOrDiff(shape1, shape2, shape3) &&
                       isSameOrDiff(number1, number2, number3);
 
+    // check for the calculation phase, if so just return isValidSet
+    if (calcFlag)
+    {
+        return isValidSet;
+    }
+
     // notify the user if valid or not valid set
     if (isValidSet)
     {
@@ -377,6 +435,18 @@ void MainWindow::checkSet(QPushButton *button1, QPushButton *button2, QPushButto
         if (isCardStackEmpty())
         {
             QMessageBox::information(this, "No More Cards", "All cards have been used!");
+
+            // now check if there are any possible sets left in the remaining cards
+            // get the remaining cards
+            QVector<QPair<QPushButton*, QString>> remainingCards = getRemainingCards();
+            // calculate all the possible sets for the remaining cards
+            calculatePossibleSets(remainingCards);
+            // check if there are any possible sets for the remaining cards
+            if (possibleSets == 0)
+            {
+                // if none, end the game
+                endGame();
+            }
         }
         else
         {
@@ -397,6 +467,7 @@ void MainWindow::checkSet(QPushButton *button1, QPushButton *button2, QPushButto
         selectedCard3 = nullptr;
 
     }
+    return isValidSet;
 }
 
 void MainWindow::drawNewCards()
@@ -486,6 +557,55 @@ void MainWindow::onAddCardClicked()
             QMessageBox::warning(this, "Can't Add More Cards", "The maximum number of cards has been reached!");
         }
     }
+}
+
+QVector<QPair<QPushButton*, QString>> MainWindow::getRemainingCards()
+{
+    // create a QVector to store the remaining cards
+    QVector<QPair<QPushButton*, QString>> remainingCards;
+
+    // first check if any of the pushButtonNew are active and add to remaining cards if so
+    if (ui->pushButtonNew1->isVisible() && ui->pushButtonNew1)
+    {
+        QPair<QPushButton*, QString> cardPair(ui->pushButtonNew1, ui->pushButtonNew1->property("iconName").toString());
+        remainingCards.append(cardPair);
+    }
+    if (ui->pushButtonNew2->isVisible() && ui->pushButtonNew2)
+    {
+        QPair<QPushButton*, QString> cardPair(ui->pushButtonNew2, ui->pushButtonNew2->property("iconName").toString());
+        remainingCards.append(cardPair);
+    }
+    if (ui->pushButtonNew3->isVisible() && ui->pushButtonNew3)
+    {
+        QPair<QPushButton*, QString> cardPair(ui->pushButtonNew3, ui->pushButtonNew3->property("iconName").toString());
+        remainingCards.append(cardPair);
+    }
+
+    // next, add each of the regular pushButtons to the remaining cards
+    for (int i = 0; i < START_SIZE; i++)
+    {
+        // get the current button name
+        QString buttonName = "pushButton" + QString::number(i+1);
+        // find the pushButton from the current button name
+        QPushButton *button = findChild<QPushButton*>(buttonName);
+        if (button)
+        {
+            // add the current pushButton cardPair to the remaining cards
+            QPair<QPushButton*, QString> cardPair(button, button->property("iconName").toString());
+            remainingCards.append(cardPair);
+        }
+        qDebug() << remainingCards[i] << "\n";
+    }
+    // return the remaining cards QVector
+    return remainingCards;
+}
+
+void MainWindow::endGame()
+{
+    // display a message to indicate the game has ended
+    QMessageBox::information(this, "Game Over", "All sets have been found, thanks for playing!");
+    // stop the application
+    qApp->quit();
 }
 
 // helper function to check if the cardStack is empty
